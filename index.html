@@ -10,7 +10,7 @@ body {
     font-family: Arial, sans-serif;
     background: #f4f6f8;
     margin: 0;
-    padding: 15px;
+    padding: 18px;
 }
 body.dark {
     background: #2b2626;
@@ -40,17 +40,17 @@ h1 { margin-bottom: 10px; }
 
 .search {
     width: 100%;
-    padding: 10px;
-    border-radius: 20px;
+    padding: 20px;
+    border-radius: 30px;
     border: none;
     margin-bottom: 15px;
 }
 
 .card {
     background: #68ea5a;
-    padding: 12px;
-    border-radius: 12px;
-    margin-bottom: 10px;
+    padding: 18px;
+    border-radius: 15px;
+    margin-bottom: 12px;
     box-shadow: 0 2px 5px rgba(0,0,0,0.05);
     transition: 0.3s;
     position: relative;
@@ -72,7 +72,7 @@ h1 { margin-bottom: 10px; }
 .actions button {
     border: none;
     background: transparent;
-    font-size: 16px;
+    font-size: 21px;
     cursor: pointer;
     margin-left: 6px;
 }
@@ -80,10 +80,10 @@ h1 { margin-bottom: 10px; }
 /* Floating button */
 .add-btn {
     position: fixed;
-    bottom: 20px;
-    right: 20px;
-    width: 55px;
-    height: 55px;
+    bottom: 50px;
+    right: 30px;
+    width: 70px;
+    height: 70px;
     border-radius: 50%;
     background: #1abc9c;
     color: white;
@@ -102,25 +102,34 @@ h1 { margin-bottom: 10px; }
 .modal-content {
     background: white;
     margin: 25% auto;
-    padding: 15px;
+    padding: 25px;
     width: 90%;
     border-radius: 10px;
 }
 
 .modal input {
     width: 100%;
-    padding: 8px;
-    margin-bottom: 8px;
+    padding: 12px;
+    margin-bottom: 12px;
 }
 
 .modal-buttons {
     display: flex;
-    gap: 10px;
+    gap: 20px;
 }
 
 .modal-buttons button {
     flex: 1;
-    padding: 8px;
+    padding: 12px;
+}
+@media (max-width: 600px) {
+body {
+zoom: 1.2;
+}
+
+{
+line-height: 1.15;
+}
 }
 </style>
 </head>
