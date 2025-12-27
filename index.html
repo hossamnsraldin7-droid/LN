@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+<meta charset="UTF-8">
+<title>Link Notes</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#1abc9c">
+<style>
+body {
+    font-family: Arial, sans-serif;
+    background: #f4f6f8;
+    margin: 0;
+    padding: 15px;
+}
+body.dark {
+    background: #2b2626;
+    color: #000000;
+}
+body.dark h1 {
+    color: #ffffff;
+}
+body.dark .card {
+    background: #ffffff;
+}
+
+body.dark .search {
+    background: #1e1e1e;
+    color: rgb(0, 0, 0);
+}
+
+body.dark .modal-content {
+    background: #000000;
+}
+
+body.dark .add-btn {
+    background: #0aa;
+}
+
+h1 { margin-bottom: 10px; }
+
+.search {
+    width: 100%;
+    padding: 10px;
+    border-radius: 20px;
+    border: none;
+    margin-bottom: 15px;
+}
+
+.card {
+    background: #68ea5a;
+    padding: 12px;
+    border-radius: 12px;
+    margin-bottom: 10px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    transition: 0.3s;
+    position: relative;
+}
+
+.card:hover {
+    transform: scale(1.02);
+    background: #b5f995;
+}
+
+.card small { color: rgb(0, 0, 0); }
+
+.actions {
+    position: absolute;
+    top: 8px;
+    right: 10px;
+}
+
+.actions button {
+    border: none;
+    background: transparent;
+    font-size: 16px;
+    cursor: pointer;
+    margin-left: 6px;
+}
+
+/* Floating button */
+.add-btn {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 55px;
+    height: 55px;
+    border-radius: 50%;
+    background: #1abc9c;
+    color: white;
+    font-size: 30px;
+    border: none;
+}
+
+/* Modal */
+.modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.4);
+}
+
+.modal-content {
+    background: white;
+    margin: 25% auto;
+    padding: 15px;
+    width: 90%;
+    border-radius: 10px;
+}
+
+.modal input {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 8px;
+}
+
+.modal-buttons {
+    display: flex;
+    gap: 10px;
+}
+
+.modal-buttons button {
+    flex: 1;
+    padding: 8px;
+}
+</style>
+</head>
+
+<body>
+
+<h1>Your Links</h1>
+<button onclick="toggleDark()" style="margin-bottom:10px">🌞 | 🌚</button>
+<input class="search" placeholder="Search links..." onkeyup="searchLinks(this.value)">
+
+<div id="list"></div>
+
+<button class="add-btn" onclick="openAdd()">+</button>
+
+<div class="modal" id="modal">
+    <div class="modal-content">
+        <input id="title" placeholder="اسم الرابط">
+        <input id="url" placeholder="https://">
+        <div class="modal-buttons">
+            <button onclick="saveLink()">حفظ</button>
+            <button onclick="closeModal()">إلغاء</button>
+        </div>
+    </div>
+</div>
+
+<script>
+let links = JSON.parse(localStorage.getItem("links")) || [];
+let editIndex = null;
+
+function render(data = links) {
+    let list = document.getElementById("list");
+    list.innerHTML = "";
+
+    data.forEach((l, i) => {
+        list.innerHTML += `
+        <div class="card">
+            <div onclick="openLink('${l.url}')">
+                <b>${l.title}</b><br>
+                <small>${l.date}</small>
+            </div>
+
+            <div class="actions">
+                <button onclick="editLink(${i})">✏️</button>
+                <button onclick="deleteLink(${i})">🗑️</button>
+            </div>
+        </div>`;
+    });
+}
+
+function openLink(url) {
+    window.open(url, "_blank");
+}
+
+function openAdd() {
+    editIndex = null;
+    title.value = "";
+    url.value = "";
+    modal.style.display = "block";
+}
+
+function closeModal() {
+    modal.style.display = "none";
+}
+
+function saveLink() {
+    if(!title.value || !url.value) return;
+
+    if(editIndex === null) {
+        links.push({
+            title: title.value,
+            url: url.value,
+            date: new Date().toLocaleString()
+        });
+    } else {
+        links[editIndex].title = title.value;
+        links[editIndex].url = url.value;
+    }
+
+    localStorage.setItem("links", JSON.stringify(links));
+    closeModal();
+    render();
+}
+
+function editLink(i) {
+    editIndex = i;
+    title.value = links[i].title;
+    url.value = links[i].url;
+    modal.style.display = "block";
+}
+
+function deleteLink(i) {
+    if(confirm("هل تريد حذف الرابط؟")) {
+        links.splice(i, 1);
+        localStorage.setItem("links", JSON.stringify(links));
+        render();
+    }
+}
+
+function searchLinks(text) {
+    render(links.filter(l => l.title.includes(text)));
+}
+
+render();
+function toggleDark() {
+    document.body.classList.toggle("dark");
+    localStorage.setItem(
+        "darkMode",
+        document.body.classList.contains("dark")
+    );
+}
+
+if (localStorage.getItem("darkMode") === "true") {
+    document.body.classList.add("dark");
+}
+
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('service-worker.js')
+    .then(() => console.log('Service Worker Registered'))
+    .catch(err => console.log('SW error', err));
+}
+</script>
+
+</body>
+</html>
